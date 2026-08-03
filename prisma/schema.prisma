@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlanId {
+  free
+  pro
+  business
+  enterprise
+}
+
+enum Role {
+  owner
+  admin
+  member
+}
+
+enum ConversionStatus {
+  queued
+  processing
+  done
+  failed
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  plan      PlanId   @default(free)
+  apiKey    String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships   TeamMember[]
+  conversions   Conversion[]
+  favorites     Favorite[]
+  apiKeys       ApiKey[]
+  auditLogs     AuditLog[]
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  plan      PlanId   @default(free)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members    TeamMember[]
+  conversions Conversion[]
+  auditLogs  AuditLog[]
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  role      Role     @default(member)
+  createdAt DateTime @default(now())
+
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  workspaceId String
+  workspace   Workspace  @relation(fields: [workspaceId], references: [id])
+
+  @@unique([workspaceId, userId])
+}
+
+model Conversion {
+  id        String           @id @default(cuid())
+  tool      String
+  status    ConversionStatus @default(queued)
+  inputName String
+  inputSize Int
+  outputUrl String?
+  outputSize Int?
+  error     String?
+  createdAt DateTime         @default(now())
+  finishedAt DateTime?
+
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id])
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  tool      String
+  inputName String
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, tool, inputName])
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  name      String
+  keyHash   String   @unique
+  lastUsed  DateTime?
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Subscription {
+  id            String   @id @default(cuid())
+  provider      String
+  providerId    String   @unique
+  plan          PlanId   @default(free)
+  status        String
+  currentPeriod DateTime?
+  createdAt     DateTime @default(now())
+
+  userId String  @unique
+  user   User    @relation(fields: [userId], references: [id])
+}
+
+model Coupon {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  percentOff Int?
+  amountOff  Int?
+  maxUses    Int?
+  usedCount  Int      @default(0)
+  expiresAt  DateTime?
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  actorId   String?
+  ip        String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id])
+
+  @@index([workspaceId, createdAt])
+}

@@ -1,0 +1,10 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#f4f2ff"/>
+  <circle cx="1050" cy="90" r="220" fill="#4f46e5" fill-opacity="0.08"/>
+  <circle cx="120" cy="540" r="180" fill="#4f46e5" fill-opacity="0.06"/>
+  <rect x="60" y="210" width="96" height="120" rx="16" fill="#4f46e5"/>
+  <path d="M92 258h32M92 282h32M92 306h20" stroke="white" stroke-width="10" stroke-linecap="round"/>
+  <text x="180" y="270" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="bold" fill="#1a1a2e">PDFForge</text>
+  <text x="180" y="330" font-family="Arial, Helvetica, sans-serif" font-size="30" fill="#5b5b76">All your PDF tools in one place</text>
+  <text x="180" y="380" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#8a8aa3">Merge · Split · Compress · Convert · OCR · AI</text>
+</svg>
