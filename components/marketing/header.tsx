@@ -38,8 +38,11 @@ export function Header() {
               <Link href="/pricing" className="text-muted-foreground transition-colors hover:text-foreground">
                 Pricing
               </Link>
-              <Link href="/docs" className="text-muted-foreground transition-colors hover:text-foreground">
-                Docs
+              <Link href="/blog" className="text-muted-foreground transition-colors hover:text-foreground">
+                Blog
+              </Link>
+              <Link href="/about" className="text-muted-foreground transition-colors hover:text-foreground">
+                About
               </Link>
               <Link href={siteConfig.nav.dashboard.href} className="text-muted-foreground transition-colors hover:text-foreground">
                 Dashboard

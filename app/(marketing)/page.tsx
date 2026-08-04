@@ -21,6 +21,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/lib/config/site";
+import { Testimonials } from "@/components/marketing/testimonials";
+import { RecentFiles } from "@/components/tools/recent-files";
 
 export const metadata = buildMetadata({
   title: "Free Online PDF Tools — Merge, Split, Convert & Compress",
@@ -275,6 +277,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Recent files */}
+      <RecentFiles />
+
+      {/* Testimonials */}
+      <Testimonials />
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">

@@ -6,10 +6,11 @@ import { Logo } from "@/components/marketing/logo";
 import type { ToolCategory } from "@/types/tool";
 
 const COMPANY_LINKS = [
+  { href: "/about", label: "About" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/docs", label: "Documentation" },
   { href: "/blog", label: "Blog" },
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/docs", label: "Documentation" },
   { href: "/api", label: "API" },
 ];
 
