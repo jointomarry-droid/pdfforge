@@ -60,7 +60,6 @@ interface PlaceholderSpec {
 }
 
 const PLACEHOLDER_TOOLS: PlaceholderSpec[] = [
-  { slug: "word-to-pdf", name: "Word to PDF", category: "convert-to-pdf", description: "Convert DOCX and DOC files to PDF in seconds.", extensions: ["docx", "doc"], input: "office" },
   { slug: "excel-to-pdf", name: "Excel to PDF", category: "convert-to-pdf", description: "Turn XLSX spreadsheets into PDF documents.", extensions: ["xlsx", "xls"], input: "office" },
   { slug: "ppt-to-pdf", name: "PowerPoint to PDF", category: "convert-to-pdf", description: "Convert PPTX presentations to PDF slides.", extensions: ["pptx", "ppt"], input: "office" },
   { slug: "html-to-pdf", name: "HTML to PDF", category: "convert-to-pdf", description: "Render web pages and HTML files as PDF.", extensions: ["html", "htm"], input: "html" },
@@ -387,6 +386,21 @@ const FUNCTIONAL_TOOLS: ToolDefinition[] = [
       related: ["markdown-to-pdf", "images-to-pdf", "html-to-pdf"],
       faq: [
         { q: "Can I paste text without a file?", a: "Yes, paste your content directly into the editor and convert it." },
+      ],
+    },
+  ),
+  buildFunctional(
+    { slug: "word-to-pdf", name: "Word to PDF", category: "convert-to-pdf", description: "Convert DOCX and DOC files to PDF in seconds.", extensions: ["docx", "doc"], input: "office" },
+    {
+      tagline: "Convert Word documents to clean, professional PDFs",
+      longDescription:
+        "Word to PDF converts your .docx and .doc files into polished PDF documents in seconds. Headings, paragraphs, lists and basic formatting are preserved. Choose page size, margins and font size, then download a PDF that looks exactly like your original document.",
+      keywords: ["word to pdf", "docx to pdf", "doc to pdf", "convert word to pdf"],
+      related: ["text-to-pdf", "markdown-to-pdf", "html-to-pdf"],
+      faq: [
+        { q: "Can I convert .doc files (not .docx)?", a: "Yes, both .doc and .docx files are supported." },
+        { q: "Is formatting preserved?", a: "Headings, paragraphs, lists and basic styling are preserved. Complex layouts like columns and tables may be simplified." },
+        { q: "Are my files kept private?", a: "Yes — conversion runs entirely in your browser. Files never leave your device." },
       ],
     },
   ),

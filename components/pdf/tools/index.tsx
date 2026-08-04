@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Construction, Mail, CheckCircle2, ArrowRight } from "lucide-react";
+import { Construction, Mail, CheckCircle2 } from "lucide-react";
 
 import type { ToolDefinition } from "@/types/tool";
 import { MergeTool } from "@/components/pdf/tools/merge-tool";
@@ -13,6 +13,7 @@ import { WatermarkTool, PageNumbersTool } from "@/components/pdf/tools/watermark
 import { DeletePagesTool, RotatePagesTool } from "@/components/pdf/tools/delete-rotate-tools";
 import { ImageConverterTool } from "@/components/pdf/tools/image-converter-tool";
 import { TextToPdfTool } from "@/components/pdf/tools/text-tools";
+import { WordToPdfTool } from "@/components/pdf/tools/word-to-pdf-tool";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +35,7 @@ const COMPONENTS: Record<string, (tool: ToolDefinition) => React.ReactNode> = {
   "image-converter": () => <ImageConverterTool />,
   "text-to-pdf": () => <TextToPdfTool />,
   "markdown-to-pdf": () => <TextToPdfTool markdown />,
+  "word-to-pdf": () => <WordToPdfTool />,
 };
 
 function ComingSoonCard({ tool }: { tool: ToolDefinition }) {

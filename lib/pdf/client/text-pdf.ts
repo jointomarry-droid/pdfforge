@@ -231,3 +231,165 @@ function stripInline(text: string): string {
     .replace(/`(.+?)`/g, "$1")
     .replace(/\[(.+?)\]\(.+?\)/g, "$1");
 }
+
+export interface DocxPdfOptions {
+  fontSize: number;
+  margin: number;
+  pageSize: "a4" | "letter";
+}
+
+export async function docxToPdf(file: File, opts: DocxPdfOptions): Promise<Blob> {
+  const mammoth = await import("mammoth");
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await mammoth.convertToHtml({ arrayBuffer });
+  const html = result.value;
+  const size = PAGE_SIZES[opts.pageSize];
+  const doc = await PDFDocument.create();
+  const regular = await doc.embedFont(StandardFonts.Helvetica);
+  const bold = await doc.embedFont(StandardFonts.HelveticaBold);
+  const usableWidth = size.width - opts.margin * 2;
+  const ink = rgb(0.08, 0.08, 0.08);
+  const muted = rgb(0.35, 0.35, 0.4);
+
+  let page = doc.addPage([size.width, size.height]);
+  let y = size.height - opts.margin;
+
+  const ensure = (needed: number) => {
+    if (y < needed) {
+      page = doc.addPage([size.width, size.height]);
+      y = size.height - opts.margin;
+    }
+  };
+
+  const drawHeading = (text: string, level: number) => {
+    const sizes = [opts.fontSize + 10, opts.fontSize + 7, opts.fontSize + 4, opts.fontSize + 2];
+    const fs = sizes[Math.min(level - 1, sizes.length - 1)];
+    ensure(opts.margin + fs + opts.fontSize);
+    y -= fs * 0.5;
+    page.drawText(stripHtml(text), {
+      x: opts.margin,
+      y,
+      size: fs,
+      font: bold,
+      color: ink,
+    });
+    y -= fs + opts.fontSize * 0.3;
+  };
+
+  const drawParagraph = (text: string) => {
+    const stripped = stripHtml(text);
+    if (!stripped.trim()) return;
+    for (const wrapped of wrapText(stripped, regular, opts.fontSize, usableWidth)) {
+      ensure(opts.margin + opts.fontSize);
+      page.drawText(wrapped, {
+        x: opts.margin,
+        y,
+        size: opts.fontSize,
+        font: regular,
+        color: ink,
+      });
+      y -= opts.fontSize * 1.5;
+    }
+  };
+
+  const drawListItem = (text: string, ordered: boolean, index: number) => {
+    const stripped = stripHtml(text);
+    const bullet = ordered ? `${index + 1}.` : "\u2022";
+    const lineText = `  ${bullet} ${stripped}`;
+    for (const wrapped of wrapText(lineText, regular, opts.fontSize, usableWidth)) {
+      ensure(opts.margin + opts.fontSize);
+      page.drawText(wrapped, {
+        x: opts.margin,
+        y,
+        size: opts.fontSize,
+        font: regular,
+        color: ink,
+      });
+      y -= opts.fontSize * 1.5;
+    }
+  };
+
+  const tempDiv = typeof document !== "undefined" ? document.createElement("div") : null;
+  if (tempDiv) tempDiv.innerHTML = html;
+  const rawText = tempDiv ? tempDiv.textContent || "" : html.replace(/<[^>]+>/g, " ");
+
+  let listIndex = 0;
+
+  const processHtmlNode = (node: ChildNode) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent || "";
+      if (text.trim()) drawParagraph(text);
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    const el = node as HTMLElement;
+    const tag = el.tagName.toLowerCase();
+
+    if (/^h[1-6]$/.test(tag)) {
+      const level = parseInt(tag[1]);
+      drawHeading(el.textContent || "", level);
+      return;
+    }
+
+    if (tag === "p") {
+      drawParagraph(el.textContent || "");
+      return;
+    }
+
+    if (tag === "ul" || tag === "ol") {
+      const items = el.querySelectorAll(":scope > li");
+      listIndex = 0;
+      items.forEach((li) => {
+        drawListItem(li.textContent || "", tag === "ol", listIndex);
+        listIndex++;
+      });
+      return;
+    }
+
+    if (tag === "br") {
+      ensure(opts.margin + opts.fontSize);
+      y -= opts.fontSize * 0.5;
+      return;
+    }
+
+    if (tag === "hr") {
+      ensure(opts.margin + opts.fontSize);
+      page.drawLine({
+        start: { x: opts.margin, y },
+        end: { x: size.width - opts.margin, y },
+        thickness: 1,
+        color: muted,
+      });
+      y -= opts.fontSize * 1.5;
+      return;
+    }
+
+    for (const child of Array.from(el.childNodes)) {
+      processHtmlNode(child);
+    }
+  };
+
+  if (tempDiv) {
+    for (const child of Array.from(tempDiv.childNodes)) {
+      processHtmlNode(child);
+    }
+  } else {
+    drawParagraph(rawText);
+  }
+
+  const bytes = await doc.save();
+  return new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+}
+
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
