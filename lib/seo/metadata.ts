@@ -44,10 +44,31 @@ export function buildMetadata({ title, description, path, keywords, robots }: Se
 }
 
 export function buildToolMetadata(tool: ToolDefinition): Metadata {
+  const title = tool.placeholder
+    ? `${tool.name} — Free Online ${tool.name} Tool | ${siteConfig.name}`
+    : `${tool.name} — Free Online ${tool.name} | ${siteConfig.name}`;
+
+  const description = tool.placeholder
+    ? `${tool.name} coming soon to ${siteConfig.name}. ${tool.description} Free, secure, no signup required. Try our other ${tool.category.replace(/-/g, " ")} tools now.`
+    : `${tool.description} Free, fast, and secure. No signup required. Process files directly in your browser. Try ${tool.name} now on ${siteConfig.name}.`;
+
+  const longTailKeywords = [
+    `${tool.name.toLowerCase()} free online`,
+    `${tool.name.toLowerCase()} no signup`,
+    `${tool.name.toLowerCase()} no registration`,
+    `free ${tool.name.toLowerCase()} tool`,
+    `online ${tool.name.toLowerCase()} converter`,
+    `${tool.name.toLowerCase()} browser based`,
+    `${tool.name.toLowerCase()} without account`,
+    `best ${tool.name.toLowerCase()} tool 2026`,
+    `${tool.name.toLowerCase()} secure private`,
+    `${tool.name.toLowerCase()} fast download`,
+  ];
+
   return buildMetadata({
-    title: `${tool.name} — ${siteConfig.name}`,
-    description: tool.description,
+    title,
+    description,
     path: `/tools/${tool.slug}`,
-    keywords: [...tool.keywords, ...siteConfig.keywords],
+    keywords: [...tool.keywords, ...longTailKeywords, ...siteConfig.keywords],
   });
 }

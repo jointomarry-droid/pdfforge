@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { siteConfig } from "@/lib/config/site";
 import { absoluteUrl } from "@/lib/seo/metadata";
 import { OrganizationJsonLd } from "@/components/seo/json-ld";
+import { ThemeProvider } from "@/components/marketing/theme-toggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -55,6 +56,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: siteConfig.googleSiteVerification
+    ? { google: siteConfig.googleSiteVerification }
+    : undefined,
 };
 
 export const viewport: Viewport = {
@@ -72,11 +76,14 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full">
-        <OrganizationJsonLd />
-        {children}
-        <Toaster position="bottom-right" richColors closeButton />
+        <ThemeProvider>
+          <OrganizationJsonLd />
+          {children}
+          <Toaster position="bottom-right" richColors closeButton />
+        </ThemeProvider>
       </body>
     </html>
   );

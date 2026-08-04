@@ -5,6 +5,8 @@ import {
   organizationJsonLd,
   webApplicationJsonLd,
   websiteJsonLd,
+  softwareApplicationJsonLd,
+  howToJsonLd,
   type JsonLdObject,
 } from "@/lib/seo/json-ld";
 import type { ToolDefinition } from "@/types/tool";
@@ -36,10 +38,20 @@ export function HomeJsonLd() {
 }
 
 export function ToolJsonLd({ tool }: { tool: ToolDefinition }) {
-  const objects = [
+  const objects: JsonLdObject[] = [
     webApplicationJsonLd(tool),
-    faqJsonLd(tool),
+    softwareApplicationJsonLd(tool),
     breadcrumbJsonLd(tool),
   ];
+
+  if (tool.faq.length > 0) {
+    objects.push(faqJsonLd(tool));
+  }
+
+  const howTo = howToJsonLd(tool);
+  if (howTo) {
+    objects.push(howTo);
+  }
+
   return <JsonLd objects={objects} />;
 }

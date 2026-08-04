@@ -58,14 +58,14 @@ export function HowItWorks({ steps }: { steps: string[] }) {
   const list = steps.length > 0 ? steps : defaultSteps;
   return (
     <section className="rounded-xl border bg-card p-6">
-      <h2 className="mb-4 text-lg font-semibold">How it works</h2>
-      <ol className="grid gap-4 sm:grid-cols-3">
+      <h2 className="mb-5 text-lg font-semibold">How it works</h2>
+      <ol className="grid gap-5 sm:grid-cols-3">
         {list.map((step, i) => (
-          <li key={i} className="flex gap-3">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+          <li key={i} className="flex items-start gap-3">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
               {i + 1}
             </span>
-            <span className="text-sm text-muted-foreground">{step}</span>
+            <span className="pt-1 text-sm leading-relaxed text-muted-foreground">{step}</span>
           </li>
         ))}
       </ol>

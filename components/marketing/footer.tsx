@@ -8,8 +8,16 @@ import type { ToolCategory } from "@/types/tool";
 const COMPANY_LINKS = [
   { href: "/pricing", label: "Pricing" },
   { href: "/docs", label: "Documentation" },
+  { href: "/blog", label: "Blog" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/api", label: "API" },
+];
+
+const USE_CASE_LINKS = [
+  { href: "/use-cases/students", label: "For Students" },
+  { href: "/use-cases/lawyers", label: "For Lawyers" },
+  { href: "/use-cases/business", label: "For Business" },
+  { href: "/use-cases/healthcare", label: "For Healthcare" },
 ];
 
 const CATEGORIES_FOR_FOOTER: ToolCategory[] = [
@@ -52,6 +60,41 @@ export function Footer() {
               </div>
             );
           })}
+        </div>
+
+        <div className="mt-10 grid gap-6 border-t pt-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <h3 className="mb-3 text-sm font-semibold">Use Cases</h3>
+            <ul className="space-y-2">
+              {USE_CASE_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="mb-3 text-sm font-semibold">Resources</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/blog" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="/docs" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link href="/api" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                  API
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row">

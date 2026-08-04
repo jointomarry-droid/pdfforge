@@ -13,6 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact",
     "/privacy",
     "/terms",
+    "/blog",
+    "/use-cases/students",
+    "/use-cases/lawyers",
+    "/use-cases/business",
+    "/use-cases/healthcare",
   ];
 
   const entries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
