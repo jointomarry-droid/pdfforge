@@ -6,6 +6,9 @@ import { siteConfig } from "@/lib/config/site";
 import { absoluteUrl } from "@/lib/seo/metadata";
 import { OrganizationJsonLd } from "@/components/seo/json-ld";
 import { ThemeProvider } from "@/components/marketing/theme-toggle";
+import { CookieConsent } from "@/components/marketing/cookie-consent";
+import { BackToTop } from "@/components/marketing/back-to-top";
+import { KeyboardShortcuts } from "@/components/tools/keyboard-shortcuts";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -59,6 +62,7 @@ export const metadata: Metadata = {
   verification: siteConfig.googleSiteVerification
     ? { google: siteConfig.googleSiteVerification }
     : undefined,
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
@@ -83,6 +87,9 @@ export default function RootLayout({
           <OrganizationJsonLd />
           {children}
           <Toaster position="bottom-right" richColors closeButton />
+          <CookieConsent />
+          <BackToTop />
+          <KeyboardShortcuts />
         </ThemeProvider>
       </body>
     </html>
