@@ -24,6 +24,8 @@ export interface CompressionResult {
   compressedSize: number;
 }
 
+export type ProgressCallback = (current: number, total: number) => void;
+
 /**
  * Compress a PDF by re-rendering each page as a JPEG and embedding it into a
  * fresh document. This achieves dramatic size reductions for image-heavy PDFs.
@@ -33,13 +35,15 @@ export interface CompressionResult {
 export async function compressPdf(
   file: File,
   level: CompressionLevel,
+  onProgress?: ProgressCallback,
 ): Promise<CompressionResult> {
   const originalSize = file.size;
   const settings = COMPRESSION_LEVELS[level];
   const src = await loadPdf(file);
   const out = await PDFDocument.create();
+  const totalPages = src.numPages;
 
-  for (let i = 1; i <= src.numPages; i++) {
+  for (let i = 1; i <= totalPages; i++) {
     const { canvas } = await renderPageToCanvas(src, i, settings.scale);
     const jpeg = canvas.toDataURL("image/jpeg", settings.quality / 100);
     const bytes = dataUrlToBytes(jpeg);
@@ -48,6 +52,7 @@ export async function compressPdf(
     page.drawImage(img, { x: 0, y: 0, width: canvas.width, height: canvas.height });
     canvas.width = 0;
     canvas.height = 0;
+    onProgress?.(i, totalPages);
   }
 
   await src.loadingTask.destroy();

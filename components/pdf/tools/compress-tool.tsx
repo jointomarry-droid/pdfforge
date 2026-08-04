@@ -7,7 +7,9 @@ import { FileDropzone, FileList } from "@/components/pdf/dropzone";
 import { ProcessButton, ResultCard, type ResultFile } from "@/components/pdf/tool-shell";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Progress } from "@/components/ui/progress";
 import type { CompressionLevel } from "@/lib/pdf/client/compress";
+import { trackRecentFile } from "@/lib/utils";
 
 const LEVEL_OPTIONS: { id: CompressionLevel; label: string; hint: string }[] = [
   { id: "max-quality", label: "Maximum quality", hint: "Best quality, modest size reduction" },
@@ -20,23 +22,29 @@ export function CompressTool() {
   const [level, setLevel] = React.useState<CompressionLevel>("balanced");
   const [result, setResult] = React.useState<ResultFile | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [progress, setProgress] = React.useState({ current: 0, total: 0 });
 
   const process = async () => {
     if (!file) return;
     setLoading(true);
+    setProgress({ current: 0, total: 0 });
     try {
       const { compressPdf } = await import("@/lib/pdf/client/compress");
-      const out = await compressPdf(file, level);
+      const out = await compressPdf(file, level, (current, total) => {
+        setProgress({ current, total });
+      });
       const pct = Math.max(0, Math.round((1 - out.compressedSize / out.originalSize) * 100));
       setResult({
         name: file.name.replace(/\.pdf$/i, "") + "-compressed.pdf",
         blob: out.blob,
       });
       toast.success(`File compressed — ${pct}% smaller`);
+      trackRecentFile(file.name, "compress-pdf");
     } catch {
       toast.error("Failed to compress the PDF.");
     } finally {
       setLoading(false);
+      setProgress({ current: 0, total: 0 });
     }
   };
 
@@ -65,6 +73,15 @@ export function CompressTool() {
               ))}
             </RadioGroup>
           </div>
+          {loading && progress.total > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Compressing pages...</span>
+                <span className="font-medium">{progress.current} / {progress.total}</span>
+              </div>
+              <Progress value={(progress.current / progress.total) * 100} />
+            </div>
+          )}
           <ProcessButton loading={loading} onClick={process}>
             Compress PDF
           </ProcessButton>
@@ -77,7 +94,7 @@ export function CompressTool() {
                 </p>
               ) : (
                 <p className="text-foreground">
-                  This file did not compress well at the selected level — try “Maximum compression”.
+                  This file did not compress well at the selected level — try &quot;Maximum compression&quot;.
                 </p>
               )}
             </div>

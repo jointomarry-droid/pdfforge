@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Clock, FileText, Trash2, ArrowRight } from "lucide-react";
 
-interface RecentFile {
+export interface RecentFile {
   name: string;
   tool: string;
   timestamp: number;

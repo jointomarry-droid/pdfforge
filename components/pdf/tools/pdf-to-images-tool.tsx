@@ -8,6 +8,7 @@ import { ProcessButton, ResultCard, type ResultFile } from "@/components/pdf/too
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { PdfThumbnails } from "@/components/pdf/pdf-thumbnails";
 
 interface PdfToImagesToolProps {
@@ -29,6 +30,7 @@ export function PdfToImagesTool({ format }: PdfToImagesToolProps) {
   const [selectAll, setSelectAll] = React.useState(true);
   const [results, setResults] = React.useState<ResultFile[]>([]);
   const [loading, setLoading] = React.useState(false);
+  const [progress, setProgress] = React.useState({ current: 0, total: 0 });
 
   const toggle = (page: number) => {
     setSelectAll(false);
@@ -43,16 +45,20 @@ export function PdfToImagesTool({ format }: PdfToImagesToolProps) {
   const process = async () => {
     if (!file) return;
     setLoading(true);
+    setProgress({ current: 0, total: 0 });
     try {
       const { pdfToImages } = await import("@/lib/pdf/client/pdf-to-images");
       const pages = selectAll ? [] : [...selected].sort((a, b) => a - b);
-      const { blobs } = await pdfToImages(file, { format, quality, scale, pages });
+      const { blobs } = await pdfToImages(file, { format, quality, scale, pages }, (current, total) => {
+        setProgress({ current, total });
+      });
       setResults(blobs.map((b) => ({ name: b.name, blob: b.blob })));
       toast.success(`Exported ${blobs.length} image${blobs.length > 1 ? "s" : ""}`);
     } catch {
       toast.error("Failed to export images.");
     } finally {
       setLoading(false);
+      setProgress({ current: 0, total: 0 });
     }
   };
 
@@ -92,6 +98,15 @@ export function PdfToImagesTool({ format }: PdfToImagesToolProps) {
             <div className="grid max-w-xs gap-2">
               <Label htmlFor="quality">JPEG quality</Label>
               <Input id="quality" type="number" min={10} max={100} value={quality} onChange={(e) => setQuality(Number(e.target.value))} />
+            </div>
+          )}
+          {loading && progress.total > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Rendering pages...</span>
+                <span className="font-medium">{progress.current} / {progress.total}</span>
+              </div>
+              <Progress value={(progress.current / progress.total) * 100} />
             </div>
           )}
           <ProcessButton

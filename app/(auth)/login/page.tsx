@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { buildMetadata } from "@/lib/seo/metadata";
-import { flags } from "@/lib/config/flags";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { LoginForm } from "@/components/auth/auth-forms";
 
 export const metadata: Metadata = buildMetadata({
   title: "Sign in",
@@ -21,25 +19,13 @@ export default function LoginPage() {
       <CardHeader>
         <CardTitle>Welcome back</CardTitle>
         <CardDescription>
-          {flags.auth.enabled
-            ? "Sign in to access your dashboard."
-            : "Authentication is not configured. Set AUTH_SECRET to enable sign-in."}
+          Sign in to access your dashboard and conversion history.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="you@example.com" autoComplete="email" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="••••••••" autoComplete="current-password" />
-          </div>
-          <Button className="w-full" disabled={!flags.auth.enabled}>
-            Sign in
-          </Button>
-        </form>
+        <Suspense>
+          <LoginForm />
+        </Suspense>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           No account yet?{" "}
           <Link href="/signup" className="text-primary underline underline-offset-2">

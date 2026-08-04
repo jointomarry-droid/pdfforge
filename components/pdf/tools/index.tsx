@@ -14,6 +14,10 @@ import { DeletePagesTool, RotatePagesTool } from "@/components/pdf/tools/delete-
 import { ImageConverterTool } from "@/components/pdf/tools/image-converter-tool";
 import { TextToPdfTool } from "@/components/pdf/tools/text-tools";
 import { WordToPdfTool } from "@/components/pdf/tools/word-to-pdf-tool";
+import { PdfToHtmlTool, PdfToMarkdownTool, PdfToCsvTool, PdfToDocxTool } from "@/components/pdf/tools/export-tools";
+import { ExtractPagesTool } from "@/components/pdf/tools/extract-pages-tool";
+import { RearrangePagesTool } from "@/components/pdf/tools/rearrange-pages-tool";
+import { CropPdfTool } from "@/components/pdf/tools/crop-pdf-tool";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +40,13 @@ const COMPONENTS: Record<string, (tool: ToolDefinition) => React.ReactNode> = {
   "text-to-pdf": () => <TextToPdfTool />,
   "markdown-to-pdf": () => <TextToPdfTool markdown />,
   "word-to-pdf": () => <WordToPdfTool />,
+  "pdf-to-html": () => <PdfToHtmlTool />,
+  "pdf-to-markdown": () => <PdfToMarkdownTool />,
+  "pdf-to-csv": () => <PdfToCsvTool />,
+  "pdf-to-word": () => <PdfToDocxTool />,
+  "extract-pages": () => <ExtractPagesTool />,
+  "rearrange-pages": () => <RearrangePagesTool />,
+  "crop-pdf": () => <CropPdfTool />,
 };
 
 function ComingSoonCard({ tool }: { tool: ToolDefinition }) {

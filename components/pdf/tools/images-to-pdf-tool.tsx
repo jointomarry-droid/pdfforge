@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import type { PageSizeOption } from "@/lib/pdf/client/operations";
+import { trackRecentFile } from "@/lib/utils";
 
 export function ImagesToPdfTool() {
   const [files, setFiles] = React.useState<File[]>([]);
@@ -25,6 +26,7 @@ export function ImagesToPdfTool() {
       const blob = await imagesToPdf(files, { pageSize, margin, preserveAspect: true });
       setResults([{ name: "images.pdf", blob }]);
       toast.success(`Created PDF with ${files.length} image${files.length > 1 ? "s" : ""}`);
+      trackRecentFile(files[0].name, "images-to-pdf");
     } catch {
       toast.error("Failed to convert images to PDF.");
     } finally {

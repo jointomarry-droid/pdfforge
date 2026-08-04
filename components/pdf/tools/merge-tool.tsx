@@ -8,6 +8,7 @@ import { FileDropzone } from "@/components/pdf/dropzone";
 import { ProcessButton, ResultCard, type ResultFile } from "@/components/pdf/tool-shell";
 import { Button } from "@/components/ui/button";
 import { mergePdfs } from "@/lib/pdf/client/operations";
+import { trackRecentFile } from "@/lib/utils";
 
 export function MergeTool() {
   const [files, setFiles] = React.useState<File[]>([]);
@@ -34,6 +35,7 @@ export function MergeTool() {
       const blob = await mergePdfs(files);
       setResults([{ name: "merged.pdf", blob }]);
       toast.success("PDFs merged successfully");
+      trackRecentFile(files[0].name, "merge-pdf");
     } catch {
       toast.error("Failed to merge PDFs. One of the files may be corrupted.");
     } finally {

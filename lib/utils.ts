@@ -28,3 +28,16 @@ export function stripExt(name: string): string {
   const idx = name.lastIndexOf(".");
   return idx > 0 ? name.slice(0, idx) : name;
 }
+
+/**
+ * Track a recently processed file in localStorage.
+ * Wraps the addRecentFile function from recent-files.tsx.
+ */
+export async function trackRecentFile(inputName: string, toolSlug: string): Promise<void> {
+  try {
+    const { addRecentFile } = await import("@/components/tools/recent-files");
+    addRecentFile(inputName, toolSlug);
+  } catch {
+    // Ignore errors - this is non-critical
+  }
+}

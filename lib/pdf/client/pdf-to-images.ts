@@ -15,12 +15,15 @@ export interface PdfToImagesResult {
   blobs: { blob: Blob; name: string; page: number }[];
 }
 
+export type ProgressCallback = (current: number, total: number) => void;
+
 /**
  * Render selected PDF pages as raster images (JPG or PNG).
  */
 export async function pdfToImages(
   file: File,
   opts: PdfToImagesOptions,
+  onProgress?: ProgressCallback,
 ): Promise<PdfToImagesResult> {
   const src = await loadPdf(file);
   const mime = opts.format === "jpeg" ? "image/jpeg" : "image/png";
@@ -29,8 +32,10 @@ export async function pdfToImages(
   const blobs: PdfToImagesResult["blobs"] = [];
 
   const pages = opts.pages.length > 0 ? opts.pages : allPages(src.numPages);
+  const totalPages = pages.length;
 
-  for (const pageNumber of pages) {
+  for (let idx = 0; idx < pages.length; idx++) {
+    const pageNumber = pages[idx];
     const { canvas } = await renderPageToCanvas(src, pageNumber, opts.scale);
     const dataUrl =
       opts.format === "jpeg"
@@ -44,6 +49,7 @@ export async function pdfToImages(
     });
     canvas.width = 0;
     canvas.height = 0;
+    onProgress?.(idx + 1, totalPages);
   }
 
   await src.loadingTask.destroy();

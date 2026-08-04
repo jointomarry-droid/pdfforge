@@ -39,8 +39,23 @@ export default async function ToolPage({ params }: PageProps) {
     ],
     "pdf-to-word": [
       "Upload or drop your PDF file",
-      "Wait while we extract the text",
+      "Wait while we extract the text and structure",
       "Download your editable DOCX file",
+    ],
+    "pdf-to-html": [
+      "Upload or drop your PDF file",
+      "We extract text and detect document structure",
+      "Download your HTML file instantly",
+    ],
+    "pdf-to-markdown": [
+      "Upload or drop your PDF file",
+      "We extract text and convert headings automatically",
+      "Download your Markdown file",
+    ],
+    "pdf-to-csv": [
+      "Upload or drop your PDF file",
+      "We detect tables and extract data",
+      "Download your CSV spreadsheet",
     ],
     "merge-pdf": [
       "Upload or drop multiple PDF files",
@@ -56,6 +71,21 @@ export default async function ToolPage({ params }: PageProps) {
       "Upload or drop your PDF file",
       "Select compression level (low, medium, high)",
       "Download your compressed PDF instantly",
+    ],
+    "extract-pages": [
+      "Upload or drop your PDF file",
+      "Select the pages you want to extract",
+      "Download your extracted pages instantly",
+    ],
+    "rearrange-pages": [
+      "Upload or drop your PDF file",
+      "Use arrows to reorder the pages",
+      "Download your rearranged PDF instantly",
+    ],
+    "crop-pdf": [
+      "Upload or drop your PDF file",
+      "Choose a crop preset or set custom margins",
+      "Download your cropped PDF instantly",
     ],
   };
 

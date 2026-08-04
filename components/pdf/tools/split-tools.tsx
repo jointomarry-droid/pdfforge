@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { pdfToText } from "@/lib/pdf/client/operations";
 import { PdfThumbnails } from "@/components/pdf/pdf-thumbnails";
+import { trackRecentFile } from "@/lib/utils";
 
 export function PdfToTextTool() {
   const [file, setFile] = React.useState<File | null>(null);
@@ -26,6 +27,7 @@ export function PdfToTextTool() {
         blob: new Blob([text], { type: "text/plain;charset=utf-8" }),
       });
       toast.success("Text extracted successfully");
+      trackRecentFile(file.name, "pdf-to-text");
     } catch {
       toast.error("No text layer found. This PDF may be a scanned document — try PDF OCR.");
     } finally {
@@ -76,6 +78,7 @@ export function SplitTool({ mode = "ranges" }: SplitToolProps) {
       }
       setResults(outputs.map((o) => ({ name: o.name, blob: o.blob })));
       toast.success(`Created ${outputs.length} file${outputs.length > 1 ? "s" : ""}`);
+      trackRecentFile(file.name, "split-pdf");
     } catch {
       toast.error("Failed to split the PDF.");
     } finally {
@@ -132,6 +135,7 @@ export function RotateTool() {
       const blob = await rotatePdf(file, angle);
       setResults([{ name: `rotated-${angle}.pdf`, blob }]);
       toast.success("PDF rotated successfully");
+      trackRecentFile(file.name, "rotate-pdf");
     } catch {
       toast.error("Failed to rotate the PDF.");
     } finally {

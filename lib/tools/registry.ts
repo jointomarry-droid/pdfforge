@@ -67,17 +67,10 @@ const PLACEHOLDER_TOOLS: PlaceholderSpec[] = [
   { slug: "csv-to-pdf", name: "CSV to PDF", category: "convert-to-pdf", description: "Convert CSV data into a formatted PDF table.", extensions: ["csv"], input: "csv" },
   { slug: "xml-to-pdf", name: "XML to PDF", category: "convert-to-pdf", description: "Render structured XML documents as PDF.", extensions: ["xml"], input: "text" },
   { slug: "json-to-pdf", name: "JSON to PDF", category: "convert-to-pdf", description: "Pretty-print JSON data into a PDF file.", extensions: ["json"], input: "text" },
-  { slug: "pdf-to-word", name: "PDF to Word", category: "convert-from-pdf", description: "Convert PDF to editable DOCX documents.", extensions: ["pdf"], input: "pdf" },
   { slug: "pdf-to-excel", name: "PDF to Excel", category: "convert-from-pdf", description: "Extract tables from PDF into XLSX.", extensions: ["pdf"], input: "pdf" },
   { slug: "pdf-to-ppt", name: "PDF to PowerPoint", category: "convert-from-pdf", description: "Turn PDF pages into editable PPTX slides.", extensions: ["pdf"], input: "pdf" },
   { slug: "pdf-to-svg", name: "PDF to SVG", category: "convert-from-pdf", description: "Convert PDF pages to scalable vector graphics.", extensions: ["pdf"], input: "pdf" },
-  { slug: "pdf-to-html", name: "PDF to HTML", category: "convert-from-pdf", description: "Extract PDF content into web-ready HTML.", extensions: ["pdf"], input: "pdf" },
-  { slug: "pdf-to-markdown", name: "PDF to Markdown", category: "convert-from-pdf", description: "Convert PDF text into Markdown files.", extensions: ["pdf"], input: "pdf" },
-  { slug: "pdf-to-csv", name: "PDF to CSV", category: "convert-from-pdf", description: "Export tables from PDF into CSV.", extensions: ["pdf"], input: "pdf" },
-  { slug: "extract-pages", name: "Extract Pages", category: "edit", description: "Pull selected pages out of a PDF.", extensions: ["pdf"], input: "pdf" },
-  { slug: "rearrange-pages", name: "Rearrange Pages", category: "edit", description: "Reorder PDF pages with drag and drop.", extensions: ["pdf"], input: "pdf" },
   { slug: "remove-watermark", name: "Remove Watermark", category: "edit", description: "Clean watermarks from PDF documents.", extensions: ["pdf"], input: "pdf" },
-  { slug: "crop-pdf", name: "Crop PDF", category: "edit", description: "Crop PDF pages to a custom area.", extensions: ["pdf"], input: "pdf" },
   { slug: "resize-pdf", name: "Resize PDF", category: "edit", description: "Change the page size of your PDF.", extensions: ["pdf"], input: "pdf" },
   { slug: "repair-pdf", name: "Repair PDF", category: "edit", description: "Fix corrupted or unreadable PDF files.", extensions: ["pdf"], input: "pdf" },
   { slug: "unlock-pdf", name: "Unlock PDF", category: "edit", description: "Remove a password from a protected PDF.", extensions: ["pdf"], input: "pdf" },
@@ -414,6 +407,112 @@ const FUNCTIONAL_TOOLS: ToolDefinition[] = [
       related: ["text-to-pdf", "pdf-to-markdown", "html-to-pdf"],
       faq: [
         { q: "Is Markdown formatting supported?", a: "Yes — headings, bold, italics, lists, blockquotes, links and code blocks are all styled." },
+      ],
+    },
+  ),
+  buildFunctional(
+    { slug: "pdf-to-html", name: "PDF to HTML", category: "convert-from-pdf", description: "Extract PDF content into web-ready HTML.", extensions: ["pdf"], input: "pdf" },
+    {
+      tagline: "Convert your PDF to clean, structured HTML",
+      longDescription:
+        "PDF to HTML extracts text and structure from your PDF and converts it into a clean HTML file. Headings, paragraphs and basic formatting are preserved. Perfect for repurposing PDF content for the web, email newsletters or content management systems.",
+      keywords: ["pdf to html", "convert pdf to html", "pdf to webpage"],
+      related: ["pdf-to-text", "pdf-to-markdown", "pdf-to-word"],
+      faq: [
+        { q: "Does PDF to HTML preserve formatting?", a: "Basic structure like headings and paragraphs are preserved. Complex layouts may be simplified." },
+        { q: "Can I customize the HTML output?", a: "The tool generates clean HTML with optional embedded styles for easy customization." },
+        { q: "Is this client-side?", a: "Yes — conversion runs entirely in your browser. Files never leave your device." },
+      ],
+    },
+  ),
+  buildFunctional(
+    { slug: "pdf-to-markdown", name: "PDF to Markdown", category: "convert-from-pdf", description: "Convert PDF text into Markdown files.", extensions: ["pdf"], input: "pdf" },
+    {
+      tagline: "Extract PDF text as clean, formatted Markdown",
+      longDescription:
+        "PDF to Markdown converts your PDF documents into well-structured Markdown files. Headings, paragraphs and basic formatting are automatically detected and converted. Perfect for documentation, README files and content that needs to be version-controlled.",
+      keywords: ["pdf to markdown", "pdf to md", "convert pdf to markdown"],
+      related: ["pdf-to-text", "pdf-to-html", "markdown-to-pdf"],
+      faq: [
+        { q: "Does this preserve headings?", a: "Yes — font sizes are analyzed to detect and convert headings to Markdown heading syntax." },
+        { q: "Can I convert back to PDF?", a: "Yes — use our Markdown to PDF tool to convert the output back to a styled PDF." },
+        { q: "Is this client-side?", a: "Yes — conversion runs entirely in your browser. Files never leave your device." },
+      ],
+    },
+  ),
+  buildFunctional(
+    { slug: "pdf-to-csv", name: "PDF to CSV", category: "convert-from-pdf", description: "Export tables from PDF into CSV.", extensions: ["pdf"], input: "pdf" },
+    {
+      tagline: "Extract tables from PDF into CSV spreadsheets",
+      longDescription:
+        "PDF to CSV detects and extracts tabular data from your PDF documents into clean CSV files. The tool analyzes text positioning to identify column boundaries and row structure. Perfect for extracting data from reports, invoices and financial documents.",
+      keywords: ["pdf to csv", "extract tables from pdf", "pdf table extraction"],
+      related: ["pdf-to-excel", "pdf-to-text", "pdf-to-html"],
+      faq: [
+        { q: "How accurate is table extraction?", a: "The tool uses text positioning to detect tables. Well-structured PDFs with clear column alignment work best." },
+        { q: "Can I extract tables from specific pages?", a: "Currently all pages are processed. Page selection may be added in a future update." },
+        { q: "Is this client-side?", a: "Yes — conversion runs entirely in your browser. Files never leave your device." },
+      ],
+    },
+  ),
+  buildFunctional(
+    { slug: "pdf-to-word", name: "PDF to Word", category: "convert-from-pdf", description: "Convert PDF to editable DOCX documents.", extensions: ["pdf"], input: "pdf" },
+    {
+      tagline: "Convert PDF to editable Word documents",
+      longDescription:
+        "PDF to Word converts your PDF files into editable Microsoft Word documents. Text, headings and basic formatting are preserved. Download a .docx file that you can edit in Word, Google Docs or any word processor.",
+      keywords: ["pdf to word", "pdf to docx", "convert pdf to word", "pdf to doc"],
+      related: ["pdf-to-text", "pdf-to-html", "word-to-pdf"],
+      faq: [
+        { q: "Is the output editable?", a: "Yes — the generated DOCX file contains editable text and headings you can modify in any word processor." },
+        { q: "Does it preserve formatting?", a: "Basic formatting like headings and paragraphs are preserved. Complex layouts may be simplified." },
+        { q: "Is this client-side?", a: "Yes — conversion runs entirely in your browser. Files never leave your device." },
+      ],
+    },
+  ),
+  buildFunctional(
+    { slug: "extract-pages", name: "Extract Pages", category: "edit", description: "Pull selected pages out of a PDF.", extensions: ["pdf"], input: "pdf" },
+    {
+      tagline: "Extract specific pages from your PDF",
+      longDescription:
+        "Extract Pages lets you pull out specific pages from a PDF document. Select the pages you want to keep using thumbnails or type page ranges, then download a new PDF containing only those pages. Perfect for splitting long documents or extracting relevant sections.",
+      keywords: ["extract pages", "pull pages from pdf", "select pages pdf"],
+      related: ["split-pdf", "delete-pages", "rearrange-pages"],
+      faq: [
+        { q: "Can I extract non-sequential pages?", a: "Yes, select individual pages or type ranges like 1-3, 5, 7-9 to extract any combination." },
+        { q: "Does extraction affect quality?", a: "No. Pages are copied byte-for-byte, so original quality is fully preserved." },
+        { q: "Is this client-side?", a: "Yes — extraction runs entirely in your browser. Files never leave your device." },
+      ],
+    },
+  ),
+  buildFunctional(
+    { slug: "rearrange-pages", name: "Rearrange Pages", category: "edit", description: "Reorder PDF pages with drag and drop.", extensions: ["pdf"], input: "pdf" },
+    {
+      tagline: "Reorder your PDF pages in any order",
+      longDescription:
+        "Rearrange Pages lets you change the order of pages in your PDF. Use the up/down arrows to move pages to new positions. You can also reverse the entire document or reset to the original order. Great for organizing reports, presentations and multi-part documents.",
+      keywords: ["rearrange pages", "reorder pdf", "change page order", "sort pdf pages"],
+      related: ["merge-pdf", "extract-pages", "split-pdf"],
+      faq: [
+        { q: "Can I move multiple pages at once?", a: "Move one page at a time using the arrow buttons. The changes are applied when you click Rearrange." },
+        { q: "Can I reverse the page order?", a: "Yes, click the Reverse button to flip the entire document order." },
+        { q: "Is this client-side?", a: "Yes — rearrangement runs entirely in your browser. Files never leave your device." },
+      ],
+    },
+  ),
+  buildFunctional(
+    { slug: "crop-pdf", name: "Crop PDF", category: "edit", description: "Crop PDF pages to a custom area.", extensions: ["pdf"], input: "pdf" },
+    {
+      tagline: "Crop PDF pages to remove margins and borders",
+      longDescription:
+        "Crop PDF lets you trim the margins and borders of your PDF pages. Choose from presets like Top Half, Center 50%, or set custom margins in points. Select specific pages or crop the entire document at once. Perfect for removing whitespace, fixing scanned documents, or preparing pages for presentation.",
+      keywords: ["crop pdf", "trim pdf margins", "cut pdf borders", "resize pdf content"],
+      related: ["resize-pdf", "rotate-pdf", "delete-pages"],
+      faq: [
+        { q: "What is a point?", a: "1 point = 1/72 inch. So 36 points = 0.5 inch, 72 points = 1 inch." },
+        { q: "Can I crop specific pages only?", a: "Yes, select the pages you want to crop using the thumbnails, or crop all pages at once." },
+        { q: "Does cropping delete content?", a: "Cropping hides content outside the crop area. The content is still in the PDF but not visible. Use a PDF optimizer to remove hidden content." },
+        { q: "Is this client-side?", a: "Yes — cropping runs entirely in your browser. Files never leave your device." },
       ],
     },
   ),

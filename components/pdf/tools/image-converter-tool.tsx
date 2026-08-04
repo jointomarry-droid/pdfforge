@@ -8,6 +8,7 @@ import { ProcessButton, ResultCard, type ResultFile } from "@/components/pdf/too
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { ConvertFormat } from "@/lib/pdf/client/image-convert";
+import { trackRecentFile } from "@/lib/utils";
 
 const FORMATS: { id: ConvertFormat; label: string }[] = [
   { id: "jpg", label: "JPG" },
@@ -34,6 +35,7 @@ export function ImageConverterTool() {
       }
       setResults(out);
       toast.success(`Converted ${out.length} image${out.length > 1 ? "s" : ""}`);
+      trackRecentFile(files[0].name, "image-converter");
     } catch {
       toast.error("One or more images could not be converted.");
     } finally {

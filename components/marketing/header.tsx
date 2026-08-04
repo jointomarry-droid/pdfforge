@@ -8,12 +8,15 @@ import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/marketing/mobile-nav";
 import { ThemeToggle } from "@/components/marketing/theme-toggle";
 import { CommandPalette, CommandPaletteTrigger } from "@/components/tools/command-palette";
+import { getCurrentUser, LogoutButton } from "@/components/auth/auth-forms";
 import * as React from "react";
 
 export function Header() {
   const [searchOpen, setSearchOpen] = React.useState(false);
+  const [user, setUser] = React.useState<{ email: string; name: string } | null>(null);
 
   React.useEffect(() => {
+    setUser(getCurrentUser());
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
@@ -52,12 +55,23 @@ export function Header() {
           <div className="flex items-center gap-2">
             <CommandPaletteTrigger onClick={() => setSearchOpen(true)} />
             <ThemeToggle />
-            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-              <Link href="/login">Sign in</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href="/signup">Get started free</Link>
-            </Button>
+            {user ? (
+              <>
+                <span className="hidden text-sm text-muted-foreground sm:inline-flex">
+                  {user.name}
+                </span>
+                <LogoutButton />
+              </>
+            ) : (
+              <>
+                <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+                  <Link href="/login">Sign in</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href="/signup">Get started free</Link>
+                </Button>
+              </>
+            )}
             <MobileNav />
           </div>
         </div>
